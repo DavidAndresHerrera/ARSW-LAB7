@@ -1,0 +1,1 @@
+En la aplicacion se pueden presentar condiciones de carreras a la hora de que mas de dos una trate de insertar y otra de obtener o tambien trater de insertar al mismo teimpo, la region critica seria en la clase InMemoryCinemaPersistence ya que este tiene la lista de cinemas y aqui es donde toca asegurar que se pueda hacer la concurrencia

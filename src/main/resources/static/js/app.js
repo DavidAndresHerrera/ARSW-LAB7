@@ -7,6 +7,7 @@ var app = (function () {
     var pelicula;
     var stompClient = null;
     var asiento;
+    var pos = [];
     var seats = [[true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true]];
     var c,ctx;
 
@@ -22,44 +23,26 @@ var app = (function () {
 
     //get the x, y positions of the mouse click relative to the canvas
     var getMousePosition = function (evt) {
+        var canvas = document.getElementById("myCanvas");
         $('#myCanvas').click(function (e) {
             var rect = canvas.getBoundingClientRect();
             var x = e.clientX - rect.left;
             var y = e.clientY - rect.top;
-            console.info(x);
-            console.info(y);
-        });
-
-    };
-
-    var drawSeats = function (cinemaFunction) {
-        c = document.getElementById("myCanvas");
-        ctx = c.getContext("2d");
-        ctx.fillStyle = "#001933";
-        ctx.fillRect(100, 20, 300, 80);
-        ctx.fillStyle = "#FFFFFF";
-        ctx.font = "40px Arial";
-        ctx.fillText("Screen", 180, 70);
-        var row = 5;
-        var col = 0;
-        for (var i = 0; i < seats.length; i++) {
-            row++;
-            col = 0;
-            for (j = 0; j < seats[i].length; j++) {
-                if (seats[i][j]) {
-                    ctx.fillStyle = "#009900";
-                } else {
-                    ctx.fillStyle = "#FF0000";
+            for (var i = 0; i < 7; i++) {
+                for (var j = 0; j < 12; j++) {
+                    var limiteX = (pos[j][i][0]) + 23;
+                    var limiteY = (pos[j][i][1]) + 23
+                    if (x>=pos[j][i][0] && x<=(limiteX) && y >=pos[j][i][1] && y <=(limiteY)){
+                        app.buyTicket(i,j);
+                    }
                 }
-                col++;
-                ctx.fillRect(20 * col, 20 * row, 20, 20);
-                col++;
             }
-            row++;
-        }
+        });
     };
 
-    var connectAndSubscribe = function () {
+
+
+    var connectAndSubscribe = function (callback) {
         console.info('Connecting to WS...');
         var socket = new SockJS('/stompendpoint');
         stompClient = Stomp.over(socket);
@@ -70,7 +53,7 @@ var app = (function () {
             stompClient.subscribe('/topic/buyticket', function (message) {
                 alert("evento recibido");
                 var theObject=JSON.parse(message.body);
-
+                callback();
             });
         });
 
@@ -128,20 +111,33 @@ var app = (function () {
         ctx.fillStyle = "#94c441";
         ctx.fillRect(c.width*0.2, c.height*0.05, c.width*0.6, c.height*0.075);
         for (var i = 0; i < seats[0].length; i++) {
+            var fila = [];
             for (var j = 0; j < seats.length; j++) {
+
                 ctx.fillStyle = "#c40a29";
                 if(seats[j][i]){
                     ctx.fillStyle = "#217ad9"
                 }
                 ctx.fillRect(i*30+20, j*40+100, 23, 23);
+                var cuadro = [];
+                cuadro.push(i*30+20);
+                cuadro.push(j*40+100);
+                fila.push(cuadro);
             }
+            pos.push(fila);
+
+
         }
+        console.log(JSON.stringify(pos));
+        $("#myCanvas").click( function(e) {
+            getMousePosition(e);
+        });
 
     };
 
-
-
-
+    function restaurar(){
+        cliente.getFunctionsByMovieCinemaAndDate(fecha,cine,pelicula,draw);
+    };
 
 
 
@@ -179,13 +175,13 @@ var app = (function () {
             cliente.deleteFunction(cine,pelicula2,fecha);
         },
         buySeat: function (row,col){
-            cliente.butTicket(fecha, cine,pelicula,row,col);
+            cliente.buyTicket(fecha, cine,pelicula,row,col);
         },
         init: function () {
             //var can = document.getElementById("canvas");
             //drawSeats();
             //websocket connection
-            connectAndSubscribe();
+            connectAndSubscribe(restaurar);
         },
 
         buyTicket: function (row, col) {

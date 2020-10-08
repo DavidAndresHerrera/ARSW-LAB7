@@ -71,4 +71,8 @@ public class CinemaFunction {
         }
         return count;
     }
+
+    public void setSeats(List<List<Boolean>> seats) {
+        this.seats = seats;
+    }
 }

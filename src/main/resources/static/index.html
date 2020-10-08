@@ -36,11 +36,13 @@
     <script type="text/javascript" src="js/apimock.js"></script>
     <script type="text/javascript" src="js/apiclient.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 
 
 
 </head>
-<body>
+<body onload="app.init()">
 <h1 style="margin-left: 30px">Cinema Booking</h1>
 <br>
 <div class="row">
@@ -84,7 +86,7 @@
     <div class="col-lg-15">
         <form>
             <p>Seats: <input type="text" id="row" placeholder="Row" > <input type="text" id="col" placeholder="Col" > <button type="button" class="btn btn-success"
-                                                                                                                               onclick="stomp.buyTicket(document.getElementById('row').value,document.getElementById('col').value)">Buy</button> </p>
+                                                                                                                               onclick="app.buyTicket(document.getElementById('row').value,document.getElementById('col').value)">Buy</button> </p>
         </form>
     </div>
 </div>

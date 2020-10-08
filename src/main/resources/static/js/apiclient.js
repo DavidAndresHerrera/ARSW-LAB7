@@ -66,14 +66,20 @@ apiclient = (function () {
                 console.info("ERROR");
             });
         },
-        buyTicket: function (fecha,cine,pelicula,row,col,){
+        buyTicket: function (fecha,cine,pelicula,seats){
             var putPromise = $.ajax({
-                url: apiUrl+ cinema+"/"+row+"/"+col,
-                type: 'POST',
-                data: JSON.stringify({"movie": {"name": nombre, "genre": genre}, "seats": seats, "date": fecha, "numSeats": 84}),
+                url: apiUrl+ cine,
+                type: 'PUT',
+                data: JSON.stringify({"movie": {"name": pelicula, "genre": ""}, "seats": seats, "date": fecha, "numSeats": ""}),
                 contentType: "application/json"
             });
 
+            putPromise.then(function () {
+                console.info("OK");
+                //callback();
+            }, function () {
+                console.info("ERROR");
+            });
         }
     }
 

@@ -139,6 +139,9 @@ public class InMemoryCinemaPersistence implements CinemaPersitence {
             if (f.getMovie().getName().equals(cf.getMovie().getName())) {
                 f.setDate(cf.getDate());
             }
+            if(cf.getSeats().size()!=0){
+                f.setSeats(cf.getSeats());
+            }
         }
     }
 
@@ -166,6 +169,7 @@ public class InMemoryCinemaPersistence implements CinemaPersitence {
         }
 
     }
+
 }
 
 

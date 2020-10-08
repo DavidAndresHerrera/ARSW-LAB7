@@ -104,6 +104,7 @@ public class CinemaAPIController {
         cs.deleteFuntion(name,c);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+
     @RequestMapping(method=RequestMethod.POST, value="/{name}/{row}/{col}")
     public ResponseEntity<?> buyTicket(@PathVariable String name, @PathVariable String row, @PathVariable String col, @RequestBody CinemaFunction c ) {
         cs.buyTicket(name,Integer.parseInt("row"),Integer.parseInt("col"),c);

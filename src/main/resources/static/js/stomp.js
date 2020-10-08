@@ -1,15 +1,15 @@
-var stomp = (function () {
+var app = (function () {
 
     var seats = [[true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true]];
     var c,ctx;
-
+    
     class Seat {
         constructor(row, col) {
             this.row = row;
             this.col = col;
         }
     }
-
+    
 
     var stompClient = null;
 
@@ -22,9 +22,9 @@ var stomp = (function () {
             console.info(x);
             console.info(y);
         });
-
+  
     };
-
+    
     var drawSeats = function (cinemaFunction) {
         c = document.getElementById("myCanvas");
         ctx = c.getContext("2d");
@@ -61,8 +61,8 @@ var stomp = (function () {
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
             stompClient.subscribe('/topic/buyticket', function (eventbody) {
-                console.alert("evento recibido");
-                var theObject=JSON.parse(eventbody.body);
+               console.alert("evento recibido");
+               var theObject=JSON.parse(eventbody.body);
 
             });
         });
@@ -74,12 +74,12 @@ var stomp = (function () {
         if (seats[row][col]===true){
             seats[row][col]=false;
             console.info("purchased ticket");
-            stompClient.send("/app/buyticket", {}, JSON.stringify(st));
-
+            stompClient.send("/app/buyticket", {}, JSON.stringify(st)); 
+            
         }
         else{
             console.info("Ticket not available");
-        }
+        }  
 
     };
 
@@ -89,7 +89,7 @@ var stomp = (function () {
 
         init: function () {
             var can = document.getElementById("canvas");
-            drawSeats();
+            //drawSeats();
             //websocket connection
             connectAndSubscribe();
         },
@@ -97,7 +97,7 @@ var stomp = (function () {
         buyTicket: function (row, col) {
             console.info("buying ticket at row: " + row + "col: " + col);
             verifyAvailability(row,col);
-
+            
             //buy ticket
         },
 

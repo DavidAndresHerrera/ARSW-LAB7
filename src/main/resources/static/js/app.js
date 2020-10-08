@@ -47,10 +47,11 @@ var app = (function () {
         var socket = new SockJS('/stompendpoint');
         stompClient = Stomp.over(socket);
 
+
         //subscribe to /topic/TOPICXX when connections succeed
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/buyticket', function (message) {
+            stompClient.subscribe('/topic/buyticket.'+cine + '.' + fecha + '.' + pelicula, function (message) {
                 alert("evento recibido");
                 var theObject=JSON.parse(message.body);
                 callback();
@@ -67,7 +68,7 @@ var app = (function () {
             cliente.buyTicket(fecha,cine,pelicula,seats);
             console.info("purchased ticket");
 
-            stompClient.send("/topic/buyticket", {}, JSON.stringify(seats));
+            stompClient.send('/topic/buyticket.'+cine + '.' + fecha + '.' + pelicula, {}, JSON.stringify(seats));
 
         }
         else{
@@ -157,6 +158,8 @@ var app = (function () {
         },
         picture: function (movie){
             app.setMovie(movie);
+
+            app.init();
             cliente.getFunctionsByMovieCinemaAndDate(fecha,cine,movie,draw);
 
 
@@ -181,6 +184,7 @@ var app = (function () {
             //var can = document.getElementById("canvas");
             //drawSeats();
             //websocket connection
+
             connectAndSubscribe(restaurar);
         },
 
